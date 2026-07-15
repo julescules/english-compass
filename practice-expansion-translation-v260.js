@@ -1,0 +1,745 @@
+(function () {
+  "use strict";
+
+  const translationItem = (
+    id,
+    context,
+    tone,
+    source,
+    answer,
+    shortAnswer,
+    alternatives,
+    chunks,
+    hints,
+    level
+  ) => ({ id, context, tone, source, answer, shortAnswer, alternatives, chunks, hints, level });
+
+  window.ENGLISH_COMPASS_EXPANSION_TRANSLATIONS_V260 = Object.freeze([
+    translationItem(
+      "exp260-translation-ai-email-draft", "AI 协作", "自然且谨慎",
+      "请先用人工智能起草这封邮件，但发送前要核对日期和价格。",
+      "Please use the AI tool to draft this email first, but check the dates and prices before sending it.",
+      "Draft it with AI, then verify the dates and prices.",
+      ["Please create an initial email draft with AI and verify every date and price before it is sent."],
+      [["请先用人工智能起草这封邮件", "Please use the AI tool to draft this email first"], ["发送前要核对日期和价格", "but check the dates and prices before sending it"]],
+      ["draft this email", "check the dates", "before sending"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-ai-no-confidential-data", "AI 协作", "明确",
+      "不要把客户的姓名或账户号码粘贴到公共人工智能工具中。",
+      "Do not paste customers' names or account numbers into a public AI tool.",
+      "Keep customer names and account numbers out of public AI tools.",
+      ["Never enter customer names or account details into a publicly available AI service."],
+      [["不要把客户的姓名或账户号码", "Do not paste customers' names or account numbers"], ["粘贴到公共人工智能工具中", "into a public AI tool"]],
+      ["paste", "account numbers", "public AI tool"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-ai-meeting-actions", "AI 协作", "工作化",
+      "请让工具总结会议，并把每项后续任务和负责人列出来。",
+      "Please ask the tool to summarise the meeting and list each follow-up task with its owner.",
+      "Summarise the meeting and list every action owner.",
+      ["Please have the tool produce a meeting summary that identifies every action item and the person responsible."],
+      [["请让工具总结会议", "Please ask the tool to summarise the meeting"], ["把每项后续任务和负责人列出来", "and list each follow-up task with its owner"]],
+      ["summarise", "follow-up task", "owner"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-ai-awkward-translation", "AI 协作", "建设性",
+      "这段机器翻译意思基本正确，但语气太生硬，需要人工润色。",
+      "This machine translation is broadly accurate, but the tone is too abrupt and needs human editing.",
+      "The meaning is accurate, but a person should soften the tone.",
+      ["The automated translation conveys the main meaning, although a human editor should make the tone less blunt."],
+      [["这段机器翻译意思基本正确", "This machine translation is broadly accurate"], ["但语气太生硬，需要人工润色", "but the tone is too abrupt and needs human editing"]],
+      ["broadly accurate", "too abrupt", "human editing"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-ai-citations-uncertainty", "AI 协作", "专业",
+      "回答必须附上可核查的来源，并清楚标出模型不确定的部分。",
+      "The response must include verifiable sources and clearly identify any points the model is uncertain about.",
+      "Include checkable sources and label uncertain claims.",
+      ["Every answer should cite sources that can be checked and explicitly flag areas of model uncertainty."],
+      [["回答必须附上可核查的来源", "The response must include verifiable sources"], ["清楚标出模型不确定的部分", "and clearly identify any points the model is uncertain about"]],
+      ["verifiable sources", "identify", "uncertain about"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-ai-policy-comparison", "AI 协作", "审慎",
+      "不要只看生成的摘要，请把每条建议与最新版政策原文进行比较。",
+      "Do not rely only on the generated summary; compare each recommendation with the latest version of the policy.",
+      "Check every recommendation against the latest policy.",
+      ["Rather than trusting the generated overview alone, verify each recommendation against the current policy text."],
+      [["不要只看生成的摘要", "Do not rely only on the generated summary"], ["把每条建议与最新版政策原文进行比较", "compare each recommendation with the latest version of the policy"]],
+      ["rely on", "recommendation", "latest version"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-ai-prompt-brief", "AI 协作", "指导性",
+      "提示词要说明目标读者、期望语气和字数限制。",
+      "The prompt should specify the target audience, the desired tone, and the word limit.",
+      "State the audience, tone, and word limit in the prompt.",
+      ["Make sure the prompt defines who the content is for, how it should sound, and how long it should be."],
+      [["提示词要说明目标读者", "The prompt should specify the target audience"], ["期望语气和字数限制", "the desired tone, and the word limit"]],
+      ["specify", "target audience", "word limit"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-ai-invented-statistic", "AI 协作", "直接而专业",
+      "模型编造了一个无法找到出处的数据，所以我已将那句话删除。",
+      "The model produced a statistic that could not be traced to a source, so I removed the sentence.",
+      "I removed the unsupported statistic generated by the model.",
+      ["Because the statistic generated by the model had no traceable source, I deleted the claim."],
+      [["模型编造了一个无法找到出处的数据", "The model produced a statistic that could not be traced to a source"], ["所以我已将那句话删除", "so I removed the sentence"]],
+      ["statistic", "traced to a source", "removed"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-ai-human-approval", "AI 协作", "正式",
+      "凡是会影响客户权益的自动回复，都必须经过员工批准才能发送。",
+      "Any automated response that could affect a customer's rights must be approved by a staff member before it is sent.",
+      "A person must approve automated replies that affect customer rights.",
+      ["Automated messages with potential consequences for customer rights may only be sent after human approval."],
+      [["凡是会影响客户权益的自动回复", "Any automated response that could affect a customer's rights"], ["都必须经过员工批准才能发送", "must be approved by a staff member before it is sent"]],
+      ["automated response", "customer's rights", "human approval"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-ai-bias-review", "AI 协作", "分析性",
+      "评估系统偏差时，我们不仅要比较总体准确率，还要检查不同群体的错误模式。",
+      "When assessing system bias, we should compare not only overall accuracy but also error patterns across different groups.",
+      "Check both overall accuracy and group-level error patterns.",
+      ["A bias assessment should examine aggregate accuracy as well as differences in the types of errors made for various groups."],
+      [["评估系统偏差时", "When assessing system bias"], ["要检查总体准确率和不同群体的错误模式", "we should compare not only overall accuracy but also error patterns across different groups"]],
+      ["assessing bias", "overall accuracy", "error patterns"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-ai-audit-trail", "AI 协作", "正式且准确",
+      "为了让审核过程可追溯，我们会保存提示词、原始输出和人工修改记录。",
+      "To make the review process traceable, we will retain the prompts, the original outputs, and a record of human edits.",
+      "Keep prompts, original outputs, and edit records for traceability.",
+      ["We will preserve prompts, unedited model responses, and human revision histories so that the review can be audited."],
+      [["为了让审核过程可追溯", "To make the review process traceable"], ["我们会保存提示词、原始输出和人工修改记录", "we will retain the prompts, the original outputs, and a record of human edits"]],
+      ["traceable", "retain", "record of edits"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-ai-accountability", "AI 协作", "原则性",
+      "人工智能可以辅助判断，但最终决定及其后果仍由指定负责人承担。",
+      "AI can support the judgement process, but the designated decision-maker remains accountable for the final decision and its consequences.",
+      "AI may assist, but a named person remains accountable.",
+      ["Although AI may inform the assessment, responsibility for the decision and its outcome stays with the assigned human owner."],
+      [["人工智能可以辅助判断", "AI can support the judgement process"], ["最终决定及其后果仍由指定负责人承担", "but the designated decision-maker remains accountable for the final decision and its consequences"]],
+      ["support judgement", "designated decision-maker", "accountable"], "B2"
+    ),
+
+    translationItem(
+      "exp260-translation-remote-camera-bandwidth", "远程工作", "自然",
+      "我的网络不太稳定，如果画面卡顿，我可以先关闭摄像头吗？",
+      "My internet connection is unstable. May I turn off my camera if the video starts freezing?",
+      "May I turn off my camera if the connection becomes unstable?",
+      ["My connection is not very reliable, so would it be all right if I switched off my camera when the video freezes?"],
+      [["我的网络不太稳定", "My internet connection is unstable"], ["如果画面卡顿，我可以先关闭摄像头吗", "May I turn off my camera if the video starts freezing"]],
+      ["unstable connection", "turn off", "video freezes"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-remote-mute", "远程工作", "礼貌提醒",
+      "不发言时请把麦克风静音，这样大家会听得更清楚。",
+      "Please mute your microphone when you are not speaking so that everyone can hear more clearly.",
+      "Please stay muted when you are not speaking.",
+      ["Please keep your microphone muted unless you are speaking, as this will improve the audio for everyone."],
+      [["不发言时请把麦克风静音", "Please mute your microphone when you are not speaking"], ["这样大家会听得更清楚", "so that everyone can hear more clearly"]],
+      ["mute", "not speaking", "more clearly"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-remote-timezone-confirm", "远程工作", "清楚",
+      "为了避免时区误会，请确认邀请中的时间是伦敦时间。",
+      "To avoid confusion about time zones, please confirm that the time in the invitation is London time.",
+      "Please confirm that the invitation uses London time.",
+      ["Please verify that the meeting invitation is shown in London time so that there is no time-zone misunderstanding."],
+      [["为了避免时区误会", "To avoid confusion about time zones"], ["请确认邀请中的时间是伦敦时间", "please confirm that the time in the invitation is London time"]],
+      ["avoid confusion", "time zones", "London time"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-remote-daily-status", "远程工作", "简洁",
+      "下班前请在共享看板上更新任务状态和遇到的问题。",
+      "Before finishing work, please update the task status and any problems on the shared board.",
+      "Update your status and blockers on the shared board before you finish.",
+      ["Please record your progress and any blockers on the shared board at the end of the working day."],
+      [["下班前", "Before finishing work"], ["请在共享看板上更新任务状态和遇到的问题", "please update the task status and any problems on the shared board"]],
+      ["task status", "problems", "shared board"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-remote-ergonomic-chair", "远程工作", "礼貌",
+      "我在家办公后背经常疼，请问公司是否可以报销一把符合人体工学的椅子？",
+      "I often have back pain when working from home. Could the company reimburse me for an ergonomic chair?",
+      "Could the company cover an ergonomic chair for my home office?",
+      ["Working from home has been causing back pain, so I would like to ask whether an ergonomic chair is reimbursable."],
+      [["我在家办公后背经常疼", "I often have back pain when working from home"], ["公司是否可以报销一把符合人体工学的椅子", "Could the company reimburse me for an ergonomic chair"]],
+      ["back pain", "reimburse", "ergonomic chair"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-remote-async-decisions", "远程工作", "工作化",
+      "异步讨论结束后，请把最终决定及理由写进项目记录。",
+      "After the asynchronous discussion ends, please document the final decision and the reasoning behind it in the project log.",
+      "Record the decision and its reasoning after the async discussion.",
+      ["Once the asynchronous discussion is complete, add the agreed decision and its rationale to the project record."],
+      [["异步讨论结束后", "After the asynchronous discussion ends"], ["请把最终决定及理由写进项目记录", "please document the final decision and the reasoning behind it in the project log"]],
+      ["asynchronous discussion", "document", "reasoning"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-remote-focus-hours", "远程工作", "合作性",
+      "我会在日历上标出专注时间，但紧急问题仍可以通过电话联系我。",
+      "I will block out focus time on my calendar, but you can still call me about urgent issues.",
+      "My focus hours will be visible, and urgent calls are still welcome.",
+      ["I will mark my protected focus hours in the calendar while remaining available by phone for urgent matters."],
+      [["我会在日历上标出专注时间", "I will block out focus time on my calendar"], ["紧急问题仍可以通过电话联系我", "but you can still call me about urgent issues"]],
+      ["block out", "focus time", "urgent issues"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-remote-outage-hotspot", "远程工作", "及时",
+      "家里的网络突然中断了，我正在切换到手机热点，预计五分钟后重新上线。",
+      "My home internet has suddenly gone down. I am switching to a mobile hotspot and expect to be back online in five minutes.",
+      "My internet is down; I should be back on a hotspot in five minutes.",
+      ["There has been an unexpected home internet outage, so I am moving to a mobile connection and should reconnect within five minutes."],
+      [["家里的网络突然中断了", "My home internet has suddenly gone down"], ["我正在切换到手机热点，预计五分钟后重新上线", "I am switching to a mobile hotspot and expect to be back online in five minutes"]],
+      ["gone down", "mobile hotspot", "back online"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-remote-expense-policy", "远程工作", "专业",
+      "在购买设备之前，我想确认显示器是否属于远程办公报销范围。",
+      "Before purchasing the equipment, I would like to confirm whether a monitor is covered by the remote-work reimbursement policy.",
+      "Is a monitor eligible for remote-work reimbursement?",
+      ["I would like to check whether the home-working expense policy covers a monitor before I place the order."],
+      [["在购买设备之前", "Before purchasing the equipment"], ["我想确认显示器是否属于远程办公报销范围", "I would like to confirm whether a monitor is covered by the remote-work reimbursement policy"]],
+      ["purchasing", "covered by", "reimbursement policy"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-remote-hybrid-fairness", "远程工作", "分析性",
+      "混合办公安排不应让远程员工更难获得重要信息或晋升机会。",
+      "A hybrid-work arrangement should not make it harder for remote employees to access important information or promotion opportunities.",
+      "Remote staff should have equal access to information and advancement.",
+      ["Hybrid working should be designed so that off-site employees are not disadvantaged in access to key information or career progression."],
+      [["混合办公安排不应让远程员工更难", "A hybrid-work arrangement should not make it harder for remote employees"], ["获得重要信息或晋升机会", "to access important information or promotion opportunities"]],
+      ["hybrid-work arrangement", "access", "promotion opportunities"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-remote-follow-the-sun", "远程工作", "战略性",
+      "跨时区交接只有在责任、未决问题和下一步都写清楚时才真正有效。",
+      "A follow-the-sun handover is effective only when ownership, unresolved issues, and next steps are clearly documented.",
+      "Document ownership, open issues, and next steps for each handover.",
+      ["Cross-time-zone handovers work only if the responsible owner, outstanding questions, and required next actions are explicit."],
+      [["跨时区交接只有在以下内容写清楚时才真正有效", "A follow-the-sun handover is effective only when"], ["责任、未决问题和下一步都写清楚", "ownership, unresolved issues, and next steps are clearly documented"]],
+      ["follow-the-sun", "ownership", "unresolved issues"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-remote-monitoring-privacy", "远程工作", "审慎",
+      "引入员工监控软件前，公司应说明收集哪些数据、为何收集以及保存多久。",
+      "Before introducing employee-monitoring software, the company should explain what data will be collected, why it is needed, and how long it will be retained.",
+      "Explain the data, purpose, and retention period before monitoring staff.",
+      ["Any workplace-monitoring system should be preceded by a clear account of the data collected, its purpose, and the retention schedule."],
+      [["引入员工监控软件前", "Before introducing employee-monitoring software"], ["公司应说明收集哪些数据、为何收集以及保存多久", "the company should explain what data will be collected, why it is needed, and how long it will be retained"]],
+      ["monitoring software", "collected", "retained"], "B2"
+    ),
+
+    translationItem(
+      "exp260-translation-rent-viewing-light", "租房", "自然",
+      "我想白天再看一次房，因为我想确认客厅的采光。",
+      "I would like to view the apartment again during the day because I want to check the natural light in the living room.",
+      "Could I view the apartment in daylight to check the living room?",
+      ["I would like another daytime viewing so that I can see how much natural light the living room gets."],
+      [["我想白天再看一次房", "I would like to view the apartment again during the day"], ["我想确认客厅的采光", "because I want to check the natural light in the living room"]],
+      ["view the apartment", "during the day", "natural light"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-rent-utilities", "租房", "清楚",
+      "请问房租里包括水费、暖气费和网络费吗？",
+      "Does the rent include water, heating, and internet service?",
+      "Are water, heating, and internet included in the rent?",
+      ["Could you confirm whether water, heating, and internet charges are included in the monthly rent?"],
+      [["请问房租里包括吗", "Does the rent include"], ["水费、暖气费和网络费", "water, heating, and internet service"]],
+      ["rent include", "heating", "internet service"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-rent-inventory-photos", "租房", "实用",
+      "入住当天我会拍下现有损坏，并把照片附在房屋清单上。",
+      "On the day I move in, I will photograph any existing damage and attach the pictures to the inventory report.",
+      "I will add photos of existing damage to the inventory.",
+      ["I will document any pre-existing damage with photographs and include them in the check-in inventory."],
+      [["入住当天我会拍下现有损坏", "On the day I move in, I will photograph any existing damage"], ["把照片附在房屋清单上", "and attach the pictures to the inventory report"]],
+      ["existing damage", "attach", "inventory report"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-rent-mould-repair", "租房", "礼貌但明确",
+      "卧室窗边出现了霉斑，而且面积正在扩大，请尽快安排检查。",
+      "Mould has appeared beside the bedroom window, and the affected area is growing. Please arrange an inspection as soon as possible.",
+      "The mould is spreading; please arrange an urgent inspection.",
+      ["There is a growing patch of mould next to the bedroom window, so I would appreciate a prompt inspection."],
+      [["卧室窗边出现了霉斑，而且面积正在扩大", "Mould has appeared beside the bedroom window, and the affected area is growing"], ["请尽快安排检查", "Please arrange an inspection as soon as possible"]],
+      ["mould", "affected area", "inspection"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-rent-deposit-protection", "租房", "正式",
+      "请提供押金保护机构的名称和我的押金登记编号。",
+      "Please provide the name of the deposit protection scheme and the registration number for my deposit.",
+      "Please send me the deposit scheme and registration details.",
+      ["Could you confirm which tenancy-deposit scheme holds my deposit and provide its reference number?"],
+      [["请提供押金保护机构的名称", "Please provide the name of the deposit protection scheme"], ["和我的押金登记编号", "and the registration number for my deposit"]],
+      ["deposit protection scheme", "registration number", "deposit"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-rent-break-clause", "租房", "审慎",
+      "我想确认解约条款最早何时生效，以及需要提前多久通知。",
+      "I would like to confirm the earliest date on which the break clause can take effect and how much notice is required.",
+      "When can the break clause first apply, and what notice is required?",
+      ["Please clarify when the break clause may first be exercised and the length of notice I must give."],
+      [["我想确认解约条款最早何时生效", "I would like to confirm the earliest date on which the break clause can take effect"], ["以及需要提前多久通知", "and how much notice is required"]],
+      ["break clause", "take effect", "notice"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-rent-sublet-permission", "租房", "礼貌且正式",
+      "工作外派期间，我可以在获得书面同意后把房间转租三个月吗？",
+      "While I am away on a work assignment, may I sublet the room for three months with written permission?",
+      "May I sublet the room for three months if I receive written consent?",
+      ["Would the landlord allow a three-month sublet during my work placement, provided that approval is given in writing?"],
+      [["工作外派期间", "While I am away on a work assignment"], ["我可以在获得书面同意后把房间转租三个月吗", "may I sublet the room for three months with written permission"]],
+      ["work assignment", "sublet", "written permission"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-rent-increase-notice", "租房", "坚定",
+      "涨租通知只提前了十天，请确认这是否符合租约规定的通知期限。",
+      "The rent increase notice was given only ten days in advance. Please confirm whether this meets the notice period required by the lease.",
+      "Please check whether ten days' notice meets the lease requirement.",
+      ["I received only ten days' notice of the rent increase and would like confirmation that this complies with the tenancy agreement."],
+      [["涨租通知只提前了十天", "The rent increase notice was given only ten days in advance"], ["请确认这是否符合租约规定的通知期限", "Please confirm whether this meets the notice period required by the lease"]],
+      ["rent increase", "in advance", "notice period"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-rent-noise-record", "租房", "客观",
+      "过去两周深夜噪音反复出现，我已经记录了发生的日期和时间。",
+      "The late-night noise has occurred repeatedly over the past two weeks, and I have recorded the dates and times of each incident.",
+      "I have logged each late-night noise incident for two weeks.",
+      ["I have kept a dated record of recurring late-night noise over the last fortnight."],
+      [["过去两周深夜噪音反复出现", "The late-night noise has occurred repeatedly over the past two weeks"], ["我已经记录了发生的日期和时间", "and I have recorded the dates and times of each incident"]],
+      ["late-night noise", "repeatedly", "each incident"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-rent-renewal-repair", "租房", "协商式",
+      "如果房东能在续租前更换损坏的冰箱，我愿意签十八个月的新租约。",
+      "If the landlord replaces the broken refrigerator before renewal, I would be willing to sign a new eighteen-month lease.",
+      "I can renew for eighteen months if the refrigerator is replaced.",
+      ["I am prepared to commit to another eighteen months, provided that the faulty refrigerator is replaced before the new term begins."],
+      [["如果房东能在续租前更换损坏的冰箱", "If the landlord replaces the broken refrigerator before renewal"], ["我愿意签十八个月的新租约", "I would be willing to sign a new eighteen-month lease"]],
+      ["before renewal", "be willing to", "eighteen-month lease"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-rent-joint-liability", "租房", "正式且准确",
+      "在共同租约下，每位租客是否都可能对全部欠租承担责任，而不只是自己的份额？",
+      "Under a joint tenancy, can each tenant be held responsible for all outstanding rent rather than only their own share?",
+      "Does joint liability cover all unpaid rent, not just each tenant's share?",
+      ["Does the joint tenancy make every tenant individually liable for the full rental debt, as opposed to merely their portion?"],
+      [["在共同租约下", "Under a joint tenancy"], ["每位租客是否都可能对全部欠租承担责任，而不只是自己的份额", "can each tenant be held responsible for all outstanding rent rather than only their own share"]],
+      ["joint tenancy", "held responsible", "outstanding rent"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-rent-fair-wear", "租房", "正式且理性",
+      "退房检查应区分正常损耗和租客造成的实际损坏。",
+      "The move-out inspection should distinguish between fair wear and tear and actual damage caused by the tenant.",
+      "The inspection should separate normal wear from tenant damage.",
+      ["When assessing the property at check-out, normal deterioration should not be treated as damage attributable to the tenant."],
+      [["退房检查应区分", "The move-out inspection should distinguish between"], ["正常损耗和租客造成的实际损坏", "fair wear and tear and actual damage caused by the tenant"]],
+      ["move-out inspection", "fair wear and tear", "actual damage"], "B2"
+    ),
+
+    translationItem(
+      "exp260-translation-bank-open-account", "银行服务", "礼貌",
+      "开这个账户需要护照、住址证明和税号吗？",
+      "Do I need a passport, proof of address, and a tax number to open this account?",
+      "Which documents do I need to open the account?",
+      ["Are a passport, proof of residence, and a tax identification number required for this account?"],
+      [["开这个账户需要吗", "Do I need"], ["护照、住址证明和税号", "a passport, proof of address, and a tax number to open this account"]],
+      ["proof of address", "tax number", "open an account"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-bank-transfer-pending", "银行服务", "自然",
+      "这笔转账从昨天起一直显示处理中，通常还要等多久？",
+      "This transfer has shown as pending since yesterday. How much longer does it usually take?",
+      "How long will this pending transfer take?",
+      ["The transfer has been marked as pending since yesterday; when should I expect it to be completed?"],
+      [["这笔转账从昨天起一直显示处理中", "This transfer has shown as pending since yesterday"], ["通常还要等多久", "How much longer does it usually take"]],
+      ["transfer", "pending", "how much longer"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-bank-card-transaction", "银行服务", "紧急且清楚",
+      "我不认识这笔刷卡消费，请先冻结卡片，但不要关闭整个账户。",
+      "I do not recognise this card transaction. Please freeze the card for now, but do not close the entire account.",
+      "Freeze this card, not the whole account; I do not recognise the payment.",
+      ["This card payment is unfamiliar to me, so please block the card temporarily without closing my account."],
+      [["我不认识这笔刷卡消费", "I do not recognise this card transaction"], ["请先冻结卡片，但不要关闭整个账户", "Please freeze the card for now, but do not close the entire account"]],
+      ["recognise", "card transaction", "freeze the card"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-bank-atm-retained", "银行服务", "求助",
+      "自动取款机吞了我的卡，也没有吐出现金，我现在应该联系谁？",
+      "The ATM kept my card and did not dispense any cash. Who should I contact now?",
+      "The ATM retained my card without dispensing cash.",
+      ["The cash machine retained my bank card but gave me no money; whom should I call for assistance?"],
+      [["自动取款机吞了我的卡，也没有吐出现金", "The ATM kept my card and did not dispense any cash"], ["我现在应该联系谁", "Who should I contact now"]],
+      ["ATM", "kept my card", "dispense cash"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-bank-exchange-total-cost", "银行服务", "审慎",
+      "比较汇率时，请把手续费也算进去，不要只看页面上显示的汇率。",
+      "When comparing exchange rates, include the service fee rather than looking only at the rate displayed on the screen.",
+      "Compare the total cost, including the fee.",
+      ["Please assess the exchange rate together with all charges instead of relying solely on the advertised rate."],
+      [["比较汇率时，请把手续费也算进去", "When comparing exchange rates, include the service fee"], ["不要只看页面上显示的汇率", "rather than looking only at the rate displayed on the screen"]],
+      ["exchange rates", "service fee", "displayed rate"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-bank-direct-debit", "银行服务", "明确",
+      "我已经取消服务，请阻止商家下个月再次自动扣款。",
+      "I have cancelled the service. Please prevent the merchant from taking another direct debit next month.",
+      "Please stop next month's direct debit because the service is cancelled.",
+      ["Since the service agreement has ended, please block any further automatic debit from this merchant."],
+      [["我已经取消服务", "I have cancelled the service"], ["请阻止商家下个月再次自动扣款", "Please prevent the merchant from taking another direct debit next month"]],
+      ["cancelled", "merchant", "direct debit"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-bank-overdraft", "银行服务", "询问",
+      "如果账户透支三天，利息和固定费用会怎样计算？",
+      "If the account is overdrawn for three days, how will the interest and fixed charges be calculated?",
+      "How much will a three-day overdraft cost?",
+      ["Could you explain how interest and flat fees apply when an account remains overdrawn for three days?"],
+      [["如果账户透支三天", "If the account is overdrawn for three days"], ["利息和固定费用会怎样计算", "how will the interest and fixed charges be calculated"]],
+      ["overdrawn", "interest", "fixed charges"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-bank-chargeback", "银行服务", "正式",
+      "为了申请拒付，我可以提供订单确认、往来邮件和未收到货物的证明。",
+      "To request a chargeback, I can provide the order confirmation, the email correspondence, and evidence that the goods were not received.",
+      "I can support the chargeback with the order, emails, and delivery evidence.",
+      ["My chargeback claim can be supported by the purchase confirmation, our correspondence, and proof of non-delivery."],
+      [["为了申请拒付", "To request a chargeback"], ["我可以提供订单确认、往来邮件和未收到货物的证明", "I can provide the order confirmation, the email correspondence, and evidence that the goods were not received"]],
+      ["chargeback", "correspondence", "evidence"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-bank-fixed-variable", "银行服务", "分析性",
+      "固定利率提高了还款的可预测性，而浮动利率可能随基准利率变化。",
+      "A fixed interest rate makes repayments more predictable, whereas a variable rate may change with the benchmark rate.",
+      "Fixed rates are predictable; variable rates can follow the benchmark.",
+      ["Fixed-rate borrowing offers greater repayment certainty, while a floating rate can move in line with its reference rate."],
+      [["固定利率提高了还款的可预测性", "A fixed interest rate makes repayments more predictable"], ["而浮动利率可能随基准利率变化", "whereas a variable rate may change with the benchmark rate"]],
+      ["fixed interest rate", "predictable", "benchmark rate"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-bank-fraud-selective-freeze", "银行服务", "精确且紧急",
+      "调查欺诈期间，请限制可疑收款人的付款，同时尽量保留工资和房租等正常交易。",
+      "During the fraud investigation, please restrict payments to the suspicious recipient while preserving legitimate transactions such as salary and rent wherever possible.",
+      "Block the suspicious recipient while preserving legitimate payments where possible.",
+      ["While the fraud review is under way, please target the restriction at the suspect beneficiary and minimise disruption to genuine salary and rent transactions."],
+      [["调查欺诈期间，请限制可疑收款人的付款", "During the fraud investigation, please restrict payments to the suspicious recipient"], ["同时尽量保留工资和房租等正常交易", "while preserving legitimate transactions such as salary and rent wherever possible"]],
+      ["fraud investigation", "suspicious recipient", "legitimate transactions"], "B2"
+    ),
+
+    translationItem(
+      "exp260-translation-medical-dizziness", "医疗沟通", "清楚",
+      "我从今天早上起一直头晕，站起来时会更严重。",
+      "I have felt dizzy since this morning, and it gets worse when I stand up.",
+      "I have been dizzy since this morning, especially when standing.",
+      ["The dizziness started this morning and becomes more severe whenever I stand up."],
+      [["我从今天早上起一直头晕", "I have felt dizzy since this morning"], ["站起来时会更严重", "and it gets worse when I stand up"]],
+      ["felt dizzy", "since this morning", "gets worse"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-medical-interpreter", "医疗沟通", "礼貌",
+      "我能用英语做简单交流，但看医生时需要普通话翻译。",
+      "I can communicate in basic English, but I need a Mandarin interpreter for the medical appointment.",
+      "I need a Mandarin interpreter for the appointment.",
+      ["Although I speak some English, I require Mandarin interpreting support when I see the doctor."],
+      [["我能用英语做简单交流", "I can communicate in basic English"], ["但看医生时需要普通话翻译", "but I need a Mandarin interpreter for the medical appointment"]],
+      ["basic English", "Mandarin interpreter", "medical appointment"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-medical-side-effect", "医疗沟通", "准确",
+      "服用新药后我很困，而且嘴里一直有苦味。",
+      "Since starting the new medicine, I have felt very sleepy and have had a persistent bitter taste in my mouth.",
+      "The new medicine makes me sleepy and leaves a bitter taste.",
+      ["I have experienced drowsiness and a continuing bitter taste since I began taking the new medication."],
+      [["服用新药后我很困", "Since starting the new medicine, I have felt very sleepy"], ["而且嘴里一直有苦味", "and have had a persistent bitter taste in my mouth"]],
+      ["new medicine", "sleepy", "persistent bitter taste"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-medical-allergy-record", "医疗沟通", "重要提醒",
+      "我对青霉素过敏，请把这项信息加到我的病历里。",
+      "I am allergic to penicillin. Please add this information to my medical record.",
+      "Please record my penicillin allergy.",
+      ["Please note in my medical file that I have an allergy to penicillin."],
+      [["我对青霉素过敏", "I am allergic to penicillin"], ["请把这项信息加到我的病历里", "Please add this information to my medical record"]],
+      ["allergic to", "penicillin", "medical record"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-medical-sick-note", "医疗沟通", "礼貌",
+      "公司要求我提供病假证明，诊所可以开一份电子版吗？",
+      "My employer requires a sick note. Can the clinic issue an electronic copy?",
+      "Could the clinic provide a digital sick note?",
+      ["I need medical certification for my employer; would it be possible to receive it electronically?"],
+      [["公司要求我提供病假证明", "My employer requires a sick note"], ["诊所可以开一份电子版吗", "Can the clinic issue an electronic copy"]],
+      ["employer", "sick note", "electronic copy"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-medical-fasting-test", "医疗沟通", "核实",
+      "抽血前需要空腹吗？如果需要，水和常规药物是否可以继续？",
+      "Do I need to fast before the blood test? If so, may I still drink water and take my regular medication?",
+      "Should I fast, and can I have water and my usual medicine?",
+      ["Please confirm whether fasting is required for the blood test and whether water and routine medicines are permitted."],
+      [["抽血前需要空腹吗", "Do I need to fast before the blood test"], ["水和常规药物是否可以继续", "may I still drink water and take my regular medication"]],
+      ["fast", "blood test", "regular medication"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-medical-referral-wait", "医疗沟通", "专业",
+      "转诊已经批准，请问预计等待时间是多少，如果症状恶化该联系谁？",
+      "The referral has been approved. What is the expected waiting time, and whom should I contact if my symptoms worsen?",
+      "How long is the wait, and who should I call if I get worse?",
+      ["Now that the referral is authorised, could you advise me of the likely wait and the appropriate contact if my condition deteriorates?"],
+      [["转诊已经批准，请问预计等待时间是多少", "The referral has been approved. What is the expected waiting time"], ["如果症状恶化该联系谁", "and whom should I contact if my symptoms worsen"]],
+      ["referral", "expected waiting time", "symptoms worsen"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-medical-preauthorisation", "医疗沟通", "正式",
+      "安排检查前，请确认保险公司是否要求预先授权，以及哪些材料需要由医生提交。",
+      "Before scheduling the test, please confirm whether the insurer requires prior authorisation and which documents the doctor must submit.",
+      "Please check the insurer's authorisation and document requirements first.",
+      ["Please verify any pre-authorisation and clinical-documentation requirements with the insurer before the examination is booked."],
+      [["安排检查前，请确认保险公司是否要求预先授权", "Before scheduling the test, please confirm whether the insurer requires prior authorisation"], ["哪些材料需要由医生提交", "and which documents the doctor must submit"]],
+      ["insurer", "prior authorisation", "submit"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-medical-shared-decision", "医疗沟通", "理性且尊重",
+      "在决定治疗方案前，我想了解每个选择的预期收益、主要风险和替代方案。",
+      "Before deciding on a treatment, I would like to understand the expected benefits, the main risks, and the alternatives for each option.",
+      "Please explain the benefits, risks, and alternatives of each treatment.",
+      ["I would like to make an informed treatment decision after discussing the likely benefits, material risks, and available alternatives."],
+      [["在决定治疗方案前", "Before deciding on a treatment"], ["我想了解每个选择的预期收益、主要风险和替代方案", "I would like to understand the expected benefits, the main risks, and the alternatives for each option"]],
+      ["treatment", "expected benefits", "alternatives"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-medical-red-flags", "医疗沟通", "紧急且准确",
+      "如果出现胸痛、呼吸困难或突然失去意识，不要等待预约，应立即寻求急救。",
+      "If chest pain, difficulty breathing, or a sudden loss of consciousness occurs, do not wait for an appointment; seek emergency care immediately.",
+      "Seek emergency care immediately for these warning signs.",
+      ["Chest pain, breathing difficulties, or sudden unconsciousness are red-flag symptoms that require immediate emergency attention rather than a routine appointment."],
+      [["如果出现胸痛、呼吸困难或突然失去意识", "If chest pain, difficulty breathing, or a sudden loss of consciousness occurs"], ["不要等待预约，应立即寻求急救", "do not wait for an appointment; seek emergency care immediately"]],
+      ["difficulty breathing", "loss of consciousness", "emergency care"], "B2"
+    ),
+
+    translationItem(
+      "exp260-translation-culture-name", "跨文化沟通", "尊重",
+      "我想正确称呼你，可以请你再说一次名字的读音吗？",
+      "I would like to address you correctly. Could you pronounce your name once more for me?",
+      "Could you repeat how your name is pronounced?",
+      ["I want to make sure I say your name correctly; would you mind pronouncing it again?"],
+      [["我想正确称呼你", "I would like to address you correctly"], ["可以请你再说一次名字的读音吗", "Could you pronounce your name once more for me"]],
+      ["address you", "correctly", "pronounce"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-culture-directness", "跨文化沟通", "友好",
+      "如果我的表达听起来太直接，请告诉我，我并不是想显得不礼貌。",
+      "If I sound too direct, please let me know. I do not mean to be impolite.",
+      "Please tell me if I sound too direct.",
+      ["Please point it out if my wording seems overly direct, as no disrespect is intended."],
+      [["如果我的表达听起来太直接，请告诉我", "If I sound too direct, please let me know"], ["我并不是想显得不礼貌", "I do not mean to be impolite"]],
+      ["sound too direct", "let me know", "impolite"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-culture-holiday", "跨文化沟通", "体贴",
+      "安排截止日期前，我们先看看是否与任何团队成员的重要节日冲突。",
+      "Before setting the deadline, let us check whether it conflicts with an important holiday for any team member.",
+      "Check team holidays before fixing the deadline.",
+      ["Let us review the team's significant cultural and religious dates before we finalise the deadline."],
+      [["安排截止日期前", "Before setting the deadline"], ["我们先看看是否与任何团队成员的重要节日冲突", "let us check whether it conflicts with an important holiday for any team member"]],
+      ["setting the deadline", "conflicts with", "important holiday"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-culture-response-time", "跨文化沟通", "包容",
+      "问题提出后请留一点安静时间，让每个人都能先思考再回答。",
+      "After asking a question, please allow some quiet time so that everyone can think before responding.",
+      "Give everyone time to think before answering.",
+      ["Please pause after each question to give all participants an opportunity to reflect before they speak."],
+      [["问题提出后请留一点安静时间", "After asking a question, please allow some quiet time"], ["让每个人都能先思考再回答", "so that everyone can think before responding"]],
+      ["allow", "quiet time", "before responding"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-culture-avoid-idioms", "跨文化沟通", "指导性",
+      "和国际团队沟通时，尽量少用俚语和只有本地人才懂的比喻。",
+      "When communicating with an international team, limit slang and references that only local people are likely to understand.",
+      "Avoid local slang and obscure references in international teams.",
+      ["Use slang and culture-specific metaphors sparingly when working with colleagues from different countries."],
+      [["和国际团队沟通时", "When communicating with an international team"], ["尽量少用俚语和只有本地人才懂的比喻", "limit slang and references that only local people are likely to understand"]],
+      ["international team", "limit slang", "local references"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-culture-disagreement", "跨文化沟通", "核实",
+      "我注意到大家没有提出反对意见，但想确认这是否真的代表一致同意。",
+      "I noticed that no objections were raised, but I would like to confirm whether that genuinely means everyone agrees.",
+      "No one objected, but I want to confirm that we all agree.",
+      ["Although nobody voiced disagreement, I would like to check that the apparent silence reflects genuine consensus."],
+      [["我注意到大家没有提出反对意见", "I noticed that no objections were raised"], ["但想确认这是否真的代表一致同意", "but I would like to confirm whether that genuinely means everyone agrees"]],
+      ["objections", "confirm whether", "genuinely"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-culture-agenda", "跨文化沟通", "专业",
+      "提前发送议程能让需要翻译或准备资料的同事更充分地参与。",
+      "Sending the agenda in advance allows colleagues who need translation or preparation time to participate more fully.",
+      "An early agenda helps colleagues prepare and participate.",
+      ["Circulating the agenda beforehand supports fuller participation by colleagues who require language assistance or extra preparation."],
+      [["提前发送议程", "Sending the agenda in advance"], ["能让需要翻译或准备资料的同事更充分地参与", "allows colleagues who need translation or preparation time to participate more fully"]],
+      ["agenda in advance", "preparation time", "participate fully"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-culture-junior-voice", "跨文化沟通", "包容且专业",
+      "在等级观念较强的团队里，主持人可以先邀请资历较浅的成员发言。",
+      "In a team with a strong sense of hierarchy, the facilitator can invite more junior members to speak first.",
+      "Invite junior colleagues to speak early when hierarchy may silence them.",
+      ["Where hierarchy is influential, the meeting chair can create space by asking less senior participants for their views first."],
+      [["在等级观念较强的团队里", "In a team with a strong sense of hierarchy"], ["主持人可以先邀请资历较浅的成员发言", "the facilitator can invite more junior members to speak first"]],
+      ["hierarchy", "facilitator", "junior members"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-culture-private-feedback", "跨文化沟通", "体面且建设性",
+      "为了避免让对方当众难堪，我会私下说明具体问题，并给出改进建议。",
+      "To avoid embarrassing the person in public, I will explain the specific issue privately and suggest ways to improve it.",
+      "Give specific, constructive feedback in private.",
+      ["I would address the concrete concern and possible improvements in a private conversation rather than risk causing public embarrassment."],
+      [["为了避免让对方当众难堪", "To avoid embarrassing the person in public"], ["我会私下说明具体问题，并给出改进建议", "I will explain the specific issue privately and suggest ways to improve it"]],
+      ["embarrassing", "in public", "privately"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-culture-no-stereotype", "跨文化沟通", "分析性",
+      "了解当地习惯很有帮助，但不能把文化趋势当成对每个人的固定判断。",
+      "Understanding local norms is useful, but cultural tendencies should not be treated as fixed assumptions about every individual.",
+      "Use cultural context without stereotyping individuals.",
+      ["Awareness of local conventions can guide communication, provided that broad cultural patterns are not imposed on individuals."],
+      [["了解当地习惯很有帮助", "Understanding local norms is useful"], ["但不能把文化趋势当成对每个人的固定判断", "but cultural tendencies should not be treated as fixed assumptions about every individual"]],
+      ["local norms", "cultural tendencies", "fixed assumptions"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-culture-concept", "跨文化沟通", "专业且准确",
+      "翻译政策时，应传达概念在目标环境中的作用，而不是机械地逐字替换。",
+      "When translating a policy, convey how the concept functions in the target context rather than replacing each word mechanically.",
+      "Translate the function of the concept, not just the individual words.",
+      ["Policy translation should preserve the intended function in the receiving context instead of relying on literal word-for-word substitution."],
+      [["翻译政策时，应传达概念在目标环境中的作用", "When translating a policy, convey how the concept functions in the target context"], ["而不是机械地逐字替换", "rather than replacing each word mechanically"]],
+      ["translating a policy", "target context", "mechanically"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-culture-mediator-power", "跨文化沟通", "审慎",
+      "调解人不仅要处理语言差异，还要注意职位和发言机会不对等造成的影响。",
+      "A mediator must address not only language differences but also the effects of unequal status and unequal opportunities to speak.",
+      "Mediation should consider language, status, and access to speaking time.",
+      ["Effective mediation accounts for linguistic differences as well as power imbalances arising from rank and unequal participation."],
+      [["调解人不仅要处理语言差异", "A mediator must address not only language differences"], ["还要注意职位和发言机会不对等造成的影响", "but also the effects of unequal status and unequal opportunities to speak"]],
+      ["mediator", "unequal status", "opportunities to speak"], "B2"
+    ),
+
+    translationItem(
+      "exp260-translation-interview-daily-duties", "求职面试", "礼貌",
+      "您能介绍一下这个岗位普通一天的主要工作吗？",
+      "Could you describe the main tasks on a typical day in this role?",
+      "What does a typical day in this role look like?",
+      ["Could you give me an overview of the day-to-day responsibilities of this position?"],
+      [["您能介绍一下吗", "Could you describe"], ["这个岗位普通一天的主要工作", "the main tasks on a typical day in this role"]],
+      ["main tasks", "typical day", "this role"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-interview-start-availability", "求职面试", "清楚",
+      "如果收到录用通知，我可以在两周后开始工作。",
+      "If I receive an offer, I can start work in two weeks.",
+      "I would be available to start in two weeks.",
+      ["Should I be offered the position, I would be able to begin two weeks later."],
+      [["如果收到录用通知", "If I receive an offer"], ["我可以在两周后开始工作", "I can start work in two weeks"]],
+      ["receive an offer", "start work", "in two weeks"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-interview-role-interest", "求职面试", "积极",
+      "这个岗位吸引我，因为它既需要解决实际问题，也能帮助客户。",
+      "This role appeals to me because it involves both solving practical problems and helping customers.",
+      "I like the mix of problem-solving and customer support.",
+      ["I am drawn to the position because it combines practical problem-solving with direct customer service."],
+      [["这个岗位吸引我", "This role appeals to me"], ["因为它既需要解决实际问题，也能帮助客户", "because it involves both solving practical problems and helping customers"]],
+      ["appeals to me", "practical problems", "helping customers"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-interview-gap", "求职面试", "坦诚",
+      "那六个月我在照顾家人，同时完成了一个数据分析课程。",
+      "During those six months, I was caring for a family member while completing a data analysis course.",
+      "I cared for a relative and completed a data course during the gap.",
+      ["I spent the six-month gap supporting a family member and finishing a course in data analysis."],
+      [["那六个月我在照顾家人", "During those six months, I was caring for a family member"], ["同时完成了一个数据分析课程", "while completing a data analysis course"]],
+      ["during those six months", "caring for", "data analysis course"], "A2"
+    ),
+    translationItem(
+      "exp260-translation-interview-star-result", "求职面试", "有条理",
+      "我先说明了问题和自己的职责，再解释采取的行动以及可量化的结果。",
+      "I first described the problem and my responsibility, then explained the action I took and the measurable result.",
+      "I covered the situation, my role, my action, and the measured result.",
+      ["I structured the example by outlining the challenge and my role before detailing my actions and their quantifiable outcome."],
+      [["我先说明了问题和自己的职责", "I first described the problem and my responsibility"], ["再解释采取的行动以及可量化的结果", "then explained the action I took and the measurable result"]],
+      ["responsibility", "action I took", "measurable result"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-interview-clarify", "求职面试", "礼貌",
+      "为了确保我回答的是您想问的内容，您是更关注过程还是最终结果？",
+      "To make sure I answer the intended question, are you more interested in the process or the final outcome?",
+      "Would you like me to focus on the process or the result?",
+      ["May I clarify whether you would prefer me to focus on how I approached the task or on the eventual result?"],
+      [["为了确保我回答的是您想问的内容", "To make sure I answer the intended question"], ["您是更关注过程还是最终结果", "are you more interested in the process or the final outcome"]],
+      ["intended question", "interested in", "final outcome"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-interview-salary-range", "求职面试", "专业",
+      "结合岗位职责和市场水平，我希望薪资在这个范围内，但愿意讨论整体福利。",
+      "Based on the responsibilities and market rates, I am seeking a salary within this range, but I am open to discussing the overall benefits package.",
+      "This range reflects the role and market, though I can discuss the full package.",
+      ["My preferred range reflects the scope of the role and current market levels, while remaining flexible in light of the total compensation package."],
+      [["结合岗位职责和市场水平", "Based on the responsibilities and market rates"], ["我希望薪资在这个范围内，但愿意讨论整体福利", "I am seeking a salary within this range, but I am open to discussing the overall benefits package"]],
+      ["market rates", "salary range", "benefits package"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-interview-remote-expectation", "求职面试", "探询",
+      "我想了解团队如何安排远程办公，以及新员工在试用期内是否需要更常到办公室。",
+      "I would like to understand how the team organises remote work and whether new employees are expected to attend the office more often during probation.",
+      "How does remote work differ for employees on probation?",
+      ["Could you explain the team's remote-working pattern and any additional on-site expectations for staff during their probationary period?"],
+      [["我想了解团队如何安排远程办公", "I would like to understand how the team organises remote work"], ["新员工在试用期内是否需要更常到办公室", "and whether new employees are expected to attend the office more often during probation"]],
+      ["organises remote work", "expected", "during probation"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-interview-ai-use", "求职面试", "专业且可信",
+      "我用人工智能加快初稿和资料整理，但会亲自核实事实并对最终版本负责。",
+      "I use AI to speed up initial drafts and organise information, but I verify the facts myself and take responsibility for the final version.",
+      "AI helps with drafts, while I verify and own the final work.",
+      ["I use AI for preliminary drafting and information organisation, while independently checking factual accuracy and remaining accountable for the deliverable."],
+      [["我用人工智能加快初稿和资料整理", "I use AI to speed up initial drafts and organise information"], ["但会亲自核实事实并对最终版本负责", "but I verify the facts myself and take responsibility for the final version"]],
+      ["initial drafts", "verify the facts", "take responsibility"], "B1"
+    ),
+    translationItem(
+      "exp260-translation-interview-failure-learning", "求职面试", "反思性",
+      "项目失败后，我没有只归咎于时间不足，而是找出最早被忽视的预警信号。",
+      "After the project failed, I did not simply blame the lack of time; I identified the earliest warning signs that we had overlooked.",
+      "I examined the overlooked warning signs instead of blaming the deadline.",
+      ["Rather than attributing the failure solely to time pressure, I traced it back to the first warning indicators the team had missed."],
+      [["项目失败后，我没有只归咎于时间不足", "After the project failed, I did not simply blame the lack of time"], ["而是找出最早被忽视的预警信号", "I identified the earliest warning signs that we had overlooked"]],
+      ["blame", "warning signs", "overlooked"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-interview-offer-negotiate", "求职面试", "积极而坚定",
+      "我对录用非常感兴趣；如果基本工资无法调整，我们能否讨论额外年假或培训预算？",
+      "I am very interested in accepting the offer. If the base salary cannot be adjusted, could we discuss additional annual leave or a training budget?",
+      "If salary is fixed, could we discuss leave or training support?",
+      ["I remain enthusiastic about the offer and would like to explore extra leave or professional-development funding if there is no flexibility on base pay."],
+      [["我对录用非常感兴趣", "I am very interested in accepting the offer"], ["如果基本工资无法调整，我们能否讨论额外年假或培训预算", "If the base salary cannot be adjusted, could we discuss additional annual leave or a training budget"]],
+      ["accepting the offer", "base salary", "training budget"], "B2"
+    ),
+    translationItem(
+      "exp260-translation-interview-followup-evidence", "求职面试", "专业且具体",
+      "感谢您今天的交流，我附上了我们谈到的流程改进案例及其结果数据。",
+      "Thank you for speaking with me today. I have attached the process-improvement example we discussed, together with data showing its results.",
+      "I attached the improvement example and its outcome data.",
+      ["Thank you for today's conversation; attached is the process-improvement case we referred to, along with supporting outcome figures."],
+      [["感谢您今天的交流", "Thank you for speaking with me today"], ["我附上了我们谈到的流程改进案例及其结果数据", "I have attached the process-improvement example we discussed, together with data showing its results"]],
+      ["process improvement", "attached", "showing its results"], "B2"
+    )
+  ]);
+})();

@@ -1,0 +1,18 @@
+{
+  "name": "English Compass",
+  "short_name": "Compass",
+  "description": "包含单词、语法、翻译、听力、口语与双语阅读的本地自适应英语教练。",
+  "start_url": "./#dashboard",
+  "display": "standalone",
+  "background_color": "#fcfbfe",
+  "theme_color": "#d476a3",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+# Local development state
+.env
+.env.*
+!.env.example
+*.log
+*.pid
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dependencies and coverage (none are required for the current static build)
+node_modules/
+coverage/
+
+# Never accept private/full-edition artifacts in the public repository
+runtime/
+tmp/
+test_outputs/
+docs/logs/
+docs/conversation-history-*.md
+
+# Keep local full-edition art available for preview without redistributing it.
+assets/*
+!assets/README.md
+!assets/icon.svg
