@@ -6,6 +6,7 @@
 
 - `assets/icon.svg`：English Compass 现有项目图标，MIT。
 - `assets/README.md`：说明如何在本机补入独立授权的视觉素材包。
+- `docs/screenshots/english-compass-v111-dashboard.png`：v1.11 真实运行界面截图，仅用于项目文档展示；截图中嵌入的第三方视觉素材不作为可提取、复用的素材包发布，也不随 MIT 许可证转授。
 
 公开源码保留完整工作版的现有图片引用，但对应栅格文件由 `.gitignore` 排除，不随仓库再分发。
 

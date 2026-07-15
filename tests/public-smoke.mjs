@@ -9,6 +9,15 @@ const read = (path) => readFileSync(join(ROOT, path), "utf8");
 const html = read("index.html");
 const appSource = read("app.js");
 const swSource = read("sw.js");
+const readmeSource = read("README.md");
+const showcaseScreenshot = "docs/screenshots/english-compass-v111-dashboard.png";
+
+assert.ok(existsSync(join(ROOT, showcaseScreenshot)), "README showcase screenshot should exist");
+assert.ok(statSync(join(ROOT, showcaseScreenshot)).size > 500_000, "showcase screenshot should contain the full desktop interface");
+assert.match(readmeSource, /english-compass-v111-dashboard\.png/u, "README should display the showcase screenshot");
+assert.match(readmeSource, /精美萌系二次元视觉/u, "README should foreground the anime visual direction");
+assert.match(readmeSource, /六项能力学习闭环/u, "README should explain the connected six-skill workflow");
+assert.match(readmeSource, /10 套/u, "README should highlight the short-paper assessment design");
 
 const scriptNames = [...html.matchAll(/<script src="([^"]+)"><\/script>/gu)].map((match) => match[1]);
 const contentIndex = scriptNames.indexOf("content.js");
@@ -116,5 +125,6 @@ console.log(JSON.stringify({
     questionsPerAssessmentPaper: 35
   },
   localAssetFiles: assetFiles.length,
+  showcaseScreenshot,
   cachedFiles: appShell.length
 }, null, 2));
