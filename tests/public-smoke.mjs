@@ -32,7 +32,7 @@ for (const scriptName of scriptNames.slice(0, contentIndex + 1)) {
 
 const content = context.window.ENGLISH_COMPASS_CONTENT;
 assert.ok(content, "content.js should expose ENGLISH_COMPASS_CONTENT");
-assert.equal(content.version, "1.11.0");
+assert.equal(content.version, "1.12.0");
 assert.deepEqual(
   {
     vocabulary: content.vocabulary.length,
@@ -42,7 +42,7 @@ assert.deepEqual(
     speaking: content.speaking.length,
     reading: content.reading.length
   },
-  { vocabulary: 4250, grammar: 320, translations: 600, listening: 600, speaking: 470, reading: 240 }
+  { vocabulary: 4500, grammar: 340, translations: 640, listening: 640, speaking: 500, reading: 260 }
 );
 
 const unique = (values, label) => assert.equal(new Set(values).size, values.length, `${label} should be unique`);
@@ -59,7 +59,7 @@ assert.ok(content.translations.every((item) => typeof item.answer === "string" &
 assert.ok(content.listening.every((item) => Number.isInteger(item.answer) && item.answer >= 0 && item.answer < item.options.length));
 assert.ok(content.speaking.every((item) => Array.isArray(item.keywords) && item.keywords.length));
 assert.ok(content.reading.every((item) => item.questions.length === 3));
-assert.equal(content.reading.reduce((sum, item) => sum + item.questions.length, 0), 720);
+assert.equal(content.reading.reduce((sum, item) => sum + item.questions.length, 0), 780);
 
 assert.equal((html.match(/data-assessment-paper=/gu) || []).length, 10, "public UI should expose ten assessment papers");
 assert.match(html, /10 套共 350 题/u);
@@ -70,7 +70,7 @@ const shellMatch = swSource.match(/const APP_SHELL = (\[[\s\S]*?\]);/u);
 assert.ok(shellMatch, "service worker should expose a literal APP_SHELL array");
 const appShell = JSON.parse(shellMatch[1]);
 unique(appShell, "service-worker entries");
-assert.match(swSource, /english-compass-public-v1\.11\.0/u);
+assert.match(swSource, /english-compass-public-v1\.12\.0/u);
 for (const entry of appShell) {
   if (entry === "./") continue;
   assert.ok(existsSync(join(ROOT, entry.replace(/^\.\//u, ""))), `cached file should exist: ${entry}`);
@@ -120,7 +120,7 @@ console.log(JSON.stringify({
     listening: content.listening.length,
     speaking: content.speaking.length,
     reading: content.reading.length,
-    readingQuestions: 720,
+    readingQuestions: 780,
     assessmentPapers: 10,
     questionsPerAssessmentPaper: 35
   },

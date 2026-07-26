@@ -1,4 +1,4 @@
-const CACHE_NAME = "english-compass-public-v1.11.0";
+const CACHE_NAME = "english-compass-public-v1.12.0";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -27,6 +27,7 @@ const APP_SHELL = [
   "./practice-expansion-translation-v400.js",
   "./practice-expansion-v1100.js",
   "./practice-expansion-v1110.js",
+  "./practice-expansion-v1120.js",
   "./practice-expansion-v190.js",
   "./practice-extra.js",
   "./practice-more-grammar.js",
@@ -48,6 +49,7 @@ const APP_SHELL = [
   "./vocabulary-expansion-v3500.js",
   "./vocabulary-expansion-v4000.js",
   "./vocabulary-expansion-v4250.js",
+  "./vocabulary-expansion-v4500.js",
   "./vocabulary-extra.js",
   "./vocabulary-more-a1-a2.js",
   "./vocabulary-more-b1.js",

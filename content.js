@@ -2,8 +2,8 @@
   "use strict";
 
   window.ENGLISH_COMPASS_CONTENT = Object.freeze({
-    version: "1.11.0",
-    updatedAt: "2026-07-15",
+    version: "1.12.0",
+    updatedAt: "2026-07-26",
     vocabulary: [
       {
         id: "adapt",
@@ -252,7 +252,8 @@
       ...(window.ENGLISH_COMPASS_VOCABULARY_EXPANSION_V3000 || []),
       ...(window.ENGLISH_COMPASS_VOCABULARY_EXPANSION_V3500 || []),
       ...(window.ENGLISH_COMPASS_VOCABULARY_EXPANSION_V4000 || []),
-      ...(window.ENGLISH_COMPASS_VOCABULARY_EXPANSION_V4250 || [])
+      ...(window.ENGLISH_COMPASS_VOCABULARY_EXPANSION_V4250 || []),
+      ...(window.ENGLISH_COMPASS_VOCABULARY_EXPANSION_V4500 || [])
     ],
     grammar: [
       {
@@ -375,7 +376,8 @@
       ...(window.ENGLISH_COMPASS_EXPANSION_GRAMMAR_V220 || []),
       ...(window.ENGLISH_COMPASS_EXPANSION_GRAMMAR_V260 || []),
       ...(window.ENGLISH_COMPASS_EXPANSION_GRAMMAR_V300 || []),
-      ...(window.ENGLISH_COMPASS_EXPANSION_GRAMMAR_V320 || [])
+      ...(window.ENGLISH_COMPASS_EXPANSION_GRAMMAR_V320 || []),
+      ...(window.ENGLISH_COMPASS_EXPANSION_GRAMMAR_V340 || [])
     ],
     translations: [
       {
@@ -540,7 +542,8 @@
       ...(window.ENGLISH_COMPASS_EXPANSION_TRANSLATIONS_V400 || []),
       ...(window.ENGLISH_COMPASS_EXPANSION_TRANSLATIONS_V480 || []),
       ...(window.ENGLISH_COMPASS_EXPANSION_TRANSLATIONS_V560 || []),
-      ...(window.ENGLISH_COMPASS_EXPANSION_TRANSLATIONS_V600 || [])
+      ...(window.ENGLISH_COMPASS_EXPANSION_TRANSLATIONS_V600 || []),
+      ...(window.ENGLISH_COMPASS_EXPANSION_TRANSLATIONS_V640 || [])
     ],
     listening: [
       {
@@ -633,7 +636,8 @@
       ...(window.ENGLISH_COMPASS_LISTENING_V400 || []),
       ...(window.ENGLISH_COMPASS_EXPANSION_LISTENING_V480 || []),
       ...(window.ENGLISH_COMPASS_EXPANSION_LISTENING_V560 || []),
-      ...(window.ENGLISH_COMPASS_EXPANSION_LISTENING_V600 || [])
+      ...(window.ENGLISH_COMPASS_EXPANSION_LISTENING_V600 || []),
+      ...(window.ENGLISH_COMPASS_EXPANSION_LISTENING_V640 || [])
     ],
     speaking: [
       {
@@ -718,14 +722,16 @@
       ...(window.ENGLISH_COMPASS_SPEAKING_V320 || []),
       ...(window.ENGLISH_COMPASS_SPEAKING_V380 || []),
       ...(window.ENGLISH_COMPASS_SPEAKING_V440 || []),
-      ...(window.ENGLISH_COMPASS_SPEAKING_V470 || [])
+      ...(window.ENGLISH_COMPASS_SPEAKING_V470 || []),
+      ...(window.ENGLISH_COMPASS_SPEAKING_V500 || [])
     ],
     reading: [
       ...(window.ENGLISH_COMPASS_READING_V100 || []),
       ...(window.ENGLISH_COMPASS_READING_V140 || []),
       ...(window.ENGLISH_COMPASS_READING_V180 || []),
       ...(window.ENGLISH_COMPASS_READING_V220 || []),
-      ...(window.ENGLISH_COMPASS_READING_V240 || [])
+      ...(window.ENGLISH_COMPASS_READING_V240 || []),
+      ...(window.ENGLISH_COMPASS_READING_V260 || [])
     ]
   });
 })();
