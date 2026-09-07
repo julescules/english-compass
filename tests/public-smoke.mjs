@@ -120,7 +120,7 @@ console.log(JSON.stringify({
     listening: content.listening.length,
     speaking: content.speaking.length,
     reading: content.reading.length,
-    readingQuestions: 780,
+    readingQuestions: content.reading.reduce((sum, item) => sum + item.questions.length, 0),
     assessmentPapers: 10,
     questionsPerAssessmentPaper: 35
   },
