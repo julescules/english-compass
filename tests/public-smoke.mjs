@@ -32,7 +32,7 @@ for (const scriptName of scriptNames.slice(0, contentIndex + 1)) {
 
 const content = context.window.ENGLISH_COMPASS_CONTENT;
 assert.ok(content, "content.js should expose ENGLISH_COMPASS_CONTENT");
-assert.equal(content.version, "1.13.0");
+assert.equal(content.version, "1.14.0");
 assert.deepEqual(
   {
     vocabulary: content.vocabulary.length,
@@ -70,7 +70,7 @@ const shellMatch = swSource.match(/const APP_SHELL = (\[[\s\S]*?\]);/u);
 assert.ok(shellMatch, "service worker should expose a literal APP_SHELL array");
 const appShell = JSON.parse(shellMatch[1]);
 unique(appShell, "service-worker entries");
-assert.match(swSource, /english-compass-public-v1\.13\.0/u);
+assert.match(swSource, /english-compass-public-v1\.14\.0/u);
 for (const entry of appShell) {
   if (entry === "./") continue;
   assert.ok(existsSync(join(ROOT, entry.replace(/^\.\//u, ""))), `cached file should exist: ${entry}`);

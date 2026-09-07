@@ -2,7 +2,7 @@
   "use strict";
 
   window.ENGLISH_COMPASS_CONTENT = Object.freeze({
-    version: "1.13.0",
+    version: "1.14.0",
     updatedAt: "2026-09-07",
     vocabulary: [
       {

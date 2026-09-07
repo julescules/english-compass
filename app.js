@@ -725,6 +725,7 @@
       pagination.index = boundedIndex;
       nextPage.scrollTop = 0;
       updateViewPager(view);
+      syncReadingFocus();
     };
 
     if (boundedIndex === previousIndex) {
@@ -850,7 +851,7 @@
     next.contentVersion = CONTENT.version;
     next.profile = { ...next.profile, ...(raw.profile || {}) };
     next.profile.name = String(next.profile.name || "学习者").slice(0, 20);
-    next.profile.level = ["A1", "A2", "B1", "B2"].includes(next.profile.level) ? next.profile.level : "A2";
+    next.profile.level = ["A1", "A2", "B1", "B2", "C1"].includes(next.profile.level) ? next.profile.level : "A2";
     next.profile.goal = ["overseas", "work", "daily", "exam"].includes(next.profile.goal) ? next.profile.goal : "overseas";
     next.profile.dailyMinutes = safeInteger(next.profile.dailyMinutes, 20, 10, 45);
     next.profile.accent = ["en-US", "en-GB"].includes(next.profile.accent) ? next.profile.accent : "en-US";
@@ -1765,12 +1766,21 @@
   }
 
   function scoreExpression(text, references, keywords) {
-    const bestSimilarity = Math.max(...references.map((reference) => textSimilarity(text, reference)));
+    const ranked = references.map(reference => ({ reference, similarity: textSimilarity(text, reference) })).sort((a,b) => b.similarity-a.similarity);
+    const bestSimilarity = ranked[0]?.similarity || 0;
+    const reference = ranked[0]?.reference || "";
+    const negative = value => /\b(?:not|no|never|cannot|without)\b|n['’]t\b/i.test(value);
+    const numbers = value => [...value.matchAll(/\b\d+(?:[.,]\d+)?\b/g)].map(match=>match[0]).sort().join(",");
+    const reviewNotes = [];
+    // Near-matching text can conceal a reversed claim. Flag for review, not semantic certainty.
+    if (bestSimilarity >= 0.55 && negative(text) !== negative(reference)) reviewNotes.push("否定表达与最接近的参考句不同，请核对是否改变了原意。");
+    if (bestSimilarity >= 0.55 && numbers(text) !== numbers(reference)) reviewNotes.push("数字与最接近的参考句不同，请核对数量、日期或金额。");
     const coverage = keywordCoverage(text, keywords);
     return {
       similarity: bestSimilarity,
       coverage,
-      score: clamp(Math.round(bestSimilarity * 68 + coverage * 32), 0, 100)
+      reviewNotes,
+      score: Math.min(reviewNotes.length ? 59 : 100, clamp(Math.round(bestSimilarity * 68 + coverage * 32), 0, 100))
     };
   }
 
@@ -1812,11 +1822,11 @@
       : scoreExpression(userText, [item.answer, item.shortAnswer, ...item.alternatives], item.hints);
     const label = revealOnly
       ? "先理解结构，再用自己的话重写一遍。"
-      : result.score >= 85
+      : result.reviewNotes?.length ? result.reviewNotes.join(" ") : result.score >= 85
         ? "表达很接近自然版本，重点短语也完整。"
         : result.score >= 60
-          ? "意思基本到位，再调整搭配和句子节奏。"
-          : "核心意图已经开始成形，对照短语块再组织一次。";
+          ? "部分表达与参考句匹配，请再核对原意和搭配。"
+          : "与参考表达差异较大，请对照原意和短语块再组织一次。";
     const stage = $(".translation-stage");
     const feedback = $("#translation-feedback");
     const userVersionBlock = revealOnly
@@ -1830,8 +1840,8 @@
       <div class="answer-compare">
         ${userVersionBlock}
         <div class="answer-block"><span>一种自然说法</span><p>${escapeHtml(item.answer)}</p></div>
-        <div class="answer-block"><span>易背短版本</span><p>${escapeHtml(item.shortAnswer)}</p></div>
-        <div class="answer-block"><span>下一次注意</span><p>${escapeHtml(result.coverage >= 0.75 ? "保留你的意思，让语气更紧凑。" : `优先用上：${item.hints.join(" · ")}`)}</p></div>
+        ${item.shortAnswer !== item.answer ? `<div class="answer-block"><span>易背短版本</span><p>${escapeHtml(item.shortAnswer)}</p></div>` : ""}
+        <div class="answer-block"><span>下一次注意</span><p>${escapeHtml(result.coverage >= 0.75 ? "核对否定、数量与条件，再调整语气。" : `优先用上：${item.hints.join(" · ")}`)}</p></div>
       </div>
       <div class="chunk-list">${item.chunks.map(([source, target]) => `<span title="${escapeHtml(source)}">${escapeHtml(target)}</span>`).join("")}</div>
       <div class="button-row" style="margin-top:14px"><button class="button button-primary" type="button" data-next-translation>再练一句</button></div>`;
@@ -2293,9 +2303,9 @@
     const completeness = Math.round(lengthRatio * 100);
     const keywordScore = Math.round(result.coverage * 100);
     const goodPoint = keywordScore >= 70
-      ? "你覆盖了大部分关键意思，回答与题目保持一致。"
+      ? "关键词覆盖较高，请结合原题核对表达含义。"
       : "你已经主动开口并给出了与场景相关的回答。";
-    const improvePoint = result.score >= 82
+    const improvePoint = result.reviewNotes?.length ? result.reviewNotes.join(" ") : result.score >= 82
       ? "下一遍把停顿放在意群之间，让整句更从容。"
       : `下一遍优先加入这些表达：${item.keywords.filter((keyword) => !normalizeText(transcript).includes(normalizeText(keyword))).slice(0, 3).join(" · ") || item.keywords.slice(0, 2).join(" · ")}。`;
 
@@ -2311,7 +2321,7 @@
       <div class="feedback-note" style="margin-top:8px"><strong>最值得修正：</strong> ${escapeHtml(improvePoint)}</div>
       <div class="answer-compare" style="margin-top:12px">
         <div class="answer-block"><span>自然、面试可用版本</span><p>${escapeHtml(item.target)}</p></div>
-        <div class="answer-block"><span>更短、方便记忆</span><p>${escapeHtml(item.shortVersion)}</p></div>
+        ${item.shortVersion !== item.target ? `<div class="answer-block"><span>更短、方便记忆</span><p>${escapeHtml(item.shortVersion)}</p></div>` : ""}
       </div>
       <div class="button-row" style="margin-top:14px">
         <button class="button button-ghost" type="button" data-repeat-speaking>再说一次</button>
@@ -2380,6 +2390,7 @@
     const nextButton = $("#reading-next-question");
     nextButton.disabled = !stored;
     nextButton.textContent = readingQuestionIndex === item.questions.length - 1 ? "查看中文译文" : "下一题";
+    syncReadingFocus();
     window.requestAnimationFrame(() => decorateCardArt());
   }
 
@@ -2427,7 +2438,9 @@
     $("#reading-translation").innerHTML = readingParagraphs(item.translationZh);
     $("#reading-vocabulary").innerHTML = (item.vocabulary || []).map((entry) => `<span><strong>${escapeHtml(entry.word)}</strong><small>${escapeHtml(entry.meaning)}</small></span>`).join("");
     const readingArt = item.art || {};
-    $("#reading-passage-art").src = readingArt.passage || "assets/key-primadoll-haizakura-portrait.png";
+    const passageArt = readingArt.passage || "assets/key-primadoll-haizakura-portrait.png";
+    // The original portrait contains lettering on its book. Keep the source file, display a clean portrait.
+    $("#reading-passage-art").src = passageArt === "assets/key-primadoll-haizakura-portrait.png" ? "assets/anime-v3-sakura-lantern.jpg" : passageArt;
     $("#reading-question-art").src = readingArt.question || "assets/key-primadoll-karasuba-cafe.png";
     $("#reading-translation-art").src = readingArt.translation || "assets/anime-v3-autumn-reader.jpg";
     $$("[data-view-panel=\"reading\"] .reading-stage").forEach((stage) => {
@@ -3691,12 +3704,101 @@
     });
   }
 
+  // One searchable entry point for every collection; stable IDs keep review history intact.
+  const libraryState = { skill: "all", level: "all", query: "", page: 0 };
+  let libraryReturnFocus = null;
+  function libraryEntries() {
+    return Object.keys(SKILLS).flatMap((skill) => practiceCollection(skill).map((item) => ({ skill, item })));
+  }
+  function renderLibrary() {
+    const query = libraryState.query.trim().toLocaleLowerCase();
+    const rows = libraryEntries().filter(({skill,item}) =>
+      (libraryState.skill === "all" || skill === libraryState.skill)
+      && (libraryState.level === "all" || (item.level || "unrated") === libraryState.level)
+      && (!query || [item.id,item.word,item.definition,item.title,item.titleZh,item.topic,item.category,item.context,item.scenario,item.source,item.prompt].filter(Boolean).join(" ").toLocaleLowerCase().includes(query)));
+    const size = window.matchMedia("(max-width: 680px)").matches ? 4 : 6;
+    const pages = Math.max(1, Math.ceil(rows.length / size));
+    libraryState.page = clamp(libraryState.page, 0, pages - 1);
+    $("#library-count").textContent = `${rows.length} 项 · 第 ${libraryState.page + 1} / ${pages} 页`;
+    $("#library-previous").disabled = libraryState.page === 0;
+    $("#library-next").disabled = libraryState.page === pages - 1;
+    $("#library-results").innerHTML = rows.slice(libraryState.page * size, (libraryState.page + 1) * size).map(({skill,item}) => {
+      const title = item.word || item.titleZh || item.title || item.source || item.scenario || item.topic;
+      const detail = item.definition || item.summary || item.prompt || item.context || item.question || "阅读原文、练习与解析";
+      return `<button type="button" class="library-card" data-library-id="${escapeHtml(item.id)}" data-library-skill="${skill}"><span class="library-card-meta">${SKILLS[skill].name} · ${escapeHtml(item.level || "未分级")}</span><strong>${escapeHtml(title)}</strong><span class="library-card-detail">${escapeHtml(detail)}</span><span class="library-card-open">开始学习 <span aria-hidden="true">↗</span></span></button>`;
+    }).join("") || '<div class="library-empty"><strong>没有找到匹配内容</strong><p>试试更短的中英文关键词，或重置筛选。</p><button type="button" class="button button-primary" id="library-reset">重置筛选</button></div>';
+    $("#library-reset")?.addEventListener("click", () => {
+      Object.assign(libraryState,{skill:"all",level:"all",query:"",page:0});
+      $("#library-skill").value="all";$("#library-level").value="all";$("#library-search").value="";renderLibrary();$("#library-search").focus();
+    });
+  }
+  function setupLibrary() {
+    const dialog = $("#learning-library");
+    const open = () => {
+      if (dialog.open) return;
+      libraryReturnFocus = document.activeElement;
+      renderLibrary(); dialog.showModal(); $("#library-search").focus();
+    };
+    $("#open-library").addEventListener("click", open);
+    $("#close-library").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("close", () => libraryReturnFocus?.focus({preventScroll:true}));
+    $("#library-search").addEventListener("input", event => {libraryState.query=event.target.value;libraryState.page=0;renderLibrary();});
+    for (const key of ["skill","level"]) $("#library-"+key).addEventListener("change",event=>{libraryState[key]=event.target.value;libraryState.page=0;renderLibrary();});
+    $("#library-previous").addEventListener("click",()=>{libraryState.page--;renderLibrary();});
+    $("#library-next").addEventListener("click",()=>{libraryState.page++;renderLibrary();});
+    $("#library-results").addEventListener("click",event=>{
+      const button=event.target.closest("[data-library-id]");if(!button)return;
+      if(recognitionActive || recognitionEngineRunning || assessmentRecognitionActive){showToast("请先停止录音，再选择新的练习。");return;}
+      if (currentView === "translation" && !translationScored && $("#translation-input").value.trim()
+        && !window.confirm("翻译还未提交，切换题目会清空这次输入。继续切换吗？")) return;
+      dialog.close();
+      openReviewTarget(button.dataset.librarySkill,button.dataset.libraryId,"review");
+      applyViewPage(button.dataset.librarySkill,0,"forward",true);
+    });
+    document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();open();}});
+    window.addEventListener("resize",()=>{if(dialog.open)renderLibrary();});
+  }
+
+  function syncReadingFocus() {
+    const dialog=$("#reading-focus"); if(!dialog)return;
+    const item=currentReading(), question=item?.questions?.[readingQuestionIndex];
+    const needed=currentView==="reading" && viewPagination.get("reading")?.index===1
+      && window.matchMedia("(max-width:680px)").matches && question
+      && (question.options.join(" ").length>400 || Math.max(...question.options.map(s=>s.length))>175);
+    if(!needed){if(dialog.open)dialog.close();return;}
+    $("#reading-focus-question").textContent=question.question;
+    $("#reading-focus-zh").textContent=question.questionZh;
+    $("#reading-focus-progress").textContent=`阅读专注 · ${readingQuestionIndex+1} / ${item.questions.length}`;
+    const stored=readingAnswers[readingQuestionIndex];
+    $("#reading-focus-options").innerHTML=question.options.map((option,index)=>`<button type="button" class="focus-reading-option${stored && index===question.answer ? " is-correct" : ""}${stored && index===stored.selected && !stored.correct ? " is-wrong" : ""}" data-focus-answer="${index}" ${stored ? "disabled" : ""}><span>${String.fromCharCode(65+index)}</span><strong>${escapeHtml(option)}</strong></button>`).join("");
+    $("#reading-focus-status").textContent=stored ? (stored.correct ? "回答正确" : "已标出正确答案，请对照解析") : "请独立选择一项";
+    $("#reading-focus-next").disabled=!stored;
+    $("#reading-focus-explain").hidden=!stored;
+    $("#reading-focus-options").hidden=false;
+    $("#reading-focus-explanation").hidden=true;
+    $("#reading-focus-explain").textContent="查看解析";
+    $("#reading-focus-explanation").textContent=`${question.explanation}\n\n${question.explanationZh}`;
+    if(!dialog.open)dialog.showModal();
+  }
+  function setupReadingFocus() {
+    const dialog=$("#reading-focus");
+    const leave=()=>{applyViewPage("reading",0,"backward",true);};
+    $("#reading-focus-close").addEventListener("click",leave);
+    dialog.addEventListener("cancel",event=>{event.preventDefault();leave();});
+    $("#reading-focus-options").addEventListener("click",event=>{const button=event.target.closest('[data-focus-answer]');if(button)answerReadingQuestion(Number(button.dataset.focusAnswer));});
+    $("#reading-focus-next").addEventListener("click",()=>moveReadingQuestion(1));
+    $("#reading-focus-explain").addEventListener("click",()=>{const explanation=$("#reading-focus-explanation");explanation.hidden=!explanation.hidden;$("#reading-focus-options").hidden=!explanation.hidden;$("#reading-focus-explain").textContent=explanation.hidden?"查看解析":"返回选项";});
+    window.addEventListener("resize",syncReadingFocus);
+  }
+
   function init() {
     ensureDailyState();
     applyTheme();
     setupViewPagination();
     setupAnimeDecorations();
     bindEvents();
+    setupLibrary();
+    setupReadingFocus();
     if ("speechSynthesis" in window) {
       loadVoices();
       window.speechSynthesis.addEventListener?.("voiceschanged", loadVoices);

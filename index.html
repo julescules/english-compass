@@ -104,6 +104,7 @@
             <h1 id="page-title">今天，向前一点点</h1>
           </div>
           <div class="topbar-actions">
+            <button class="library-open-button" id="open-library" type="button" aria-haspopup="dialog" aria-controls="learning-library" title="搜索全部学习内容（Ctrl+K）">⌕ <span>学习题库</span></button>
             <div class="streak-pill" title="连续学习天数">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2.5c.4 3-1.1 4.7-2.5 6.3-1.2-1.5-1.6-2.7-1.2-4.4C6 7.1 4 10 4.7 14.3A7.4 7.4 0 0 0 12 21a7.3 7.3 0 0 0 7.3-7.1c.2-3.6-1.7-7.6-5.8-11.4Z" /></svg>
               <strong id="streak-count">0</strong>
@@ -871,7 +872,7 @@
         <p class="dialog-intro">调整后，今日任务会马上根据你的目标重新安排。</p>
         <div class="form-grid">
           <label><span>怎么称呼你</span><input type="text" name="name" maxlength="20" autocomplete="name" /></label>
-          <label><span>当前水平</span><select name="level"><option value="A1">A1 · 入门</option><option value="A2">A2 · 基础</option><option value="B1">B1 · 中级</option><option value="B2">B2 · 中高级</option></select></label>
+          <label><span>当前水平</span><select name="level"><option value="A1">A1 · 入门</option><option value="A2">A2 · 基础</option><option value="B1">B1 · 中级</option><option value="B2">B2 · 中高级</option><option value="C1">C1 · 高阶</option></select></label>
           <label><span>学习目标</span><select name="goal"><option value="overseas">海外求职与面试</option><option value="work">日常职场沟通</option><option value="daily">生活口语</option><option value="exam">综合提升</option></select></label>
           <label><span>每日时长</span><select name="dailyMinutes"><option value="10">10 分钟</option><option value="20">20 分钟</option><option value="30">30 分钟</option><option value="45">45 分钟</option></select></label>
           <label><span>英文口音</span><select name="accent"><option value="en-US">美式英语</option><option value="en-GB">英式英语</option></select></label>
@@ -890,6 +891,27 @@
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <dialog id="learning-library" class="learning-library" aria-labelledby="library-title">
+    <div class="library-shell">
+      <aside class="library-art" aria-hidden="true"><img src="assets/anime-v3-sakura-lantern.jpg" alt="" /><span>ENGLISH COMPASS<br/>在喜欢的风景里，学会新的表达。</span></aside>
+      <div class="library-workspace">
+        <header class="library-heading"><div><p class="eyebrow">YOUR LEARNING LIBRARY</p><h2 id="library-title">今天，想学什么？</h2></div><button class="icon-button" id="close-library" type="button" aria-label="关闭学习题库">×</button></header>
+        <div class="library-filters"><label class="library-search-label"><span>搜索内容</span><input id="library-search" type="search" placeholder="中文、英文、主题或题号" autocomplete="off" /></label><label><span>练习类型</span><select id="library-skill"><option value="all">全部类型</option><option value="vocabulary">单词</option><option value="grammar">语法</option><option value="translation">翻译</option><option value="listening">听力</option><option value="speaking">口语</option><option value="reading">阅读</option></select></label><label><span>难度</span><select id="library-level"><option value="all">全部难度</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option value="unrated">未分级</option></select></label></div>
+        <p id="library-count" class="library-count" aria-live="polite"></p>
+        <div id="library-results" class="library-results"></div>
+        <footer class="library-pagination"><button class="button button-ghost" type="button" id="library-previous">← 上一页</button><span>按 Esc 返回学习</span><button class="button button-primary" type="button" id="library-next">下一页 →</button></footer>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="reading-focus" class="reading-focus" aria-labelledby="reading-focus-question">
+    <header><strong id="reading-focus-progress">阅读专注</strong><button type="button" class="button button-ghost" id="reading-focus-close">返回原文</button></header>
+    <div class="focus-question-copy"><h2 id="reading-focus-question"></h2><p id="reading-focus-zh"></p></div>
+    <div id="reading-focus-options" class="focus-reading-options"></div>
+    <div id="reading-focus-explanation" class="focus-reading-explanation" hidden></div>
+    <p id="reading-focus-status" aria-live="polite"></p>
+    <footer><button type="button" class="button button-ghost" id="reading-focus-explain" hidden>查看解析</button><button type="button" class="button button-primary" id="reading-focus-next">继续 →</button></footer>
+  </dialog>
 
     <script src="vocabulary-extra.js"></script>
     <script src="vocabulary-more-a1-a2.js"></script>
@@ -942,7 +964,10 @@
     <script src="practice-expansion-v1110.js"></script>
     <script src="practice-expansion-v1120.js"></script>
     <script src="practice-expansion-v1130.js"></script>
+    <script src="practice-refinements-v1140.js"></script>
     <script src="content.js"></script>
     <script src="app.js"></script>
+  
+
   </body>
 </html>
